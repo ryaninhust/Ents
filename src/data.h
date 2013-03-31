@@ -21,38 +21,38 @@ struct VectorSort {
 }
 class SVMData {
 public:
-	SVMData(const char* file, int feature, int size, int _class, int myid, int procs);
+	SVMData(int feature, int size, int _class, int _myid, int _procs);
 	~SVMData();
+	void read(const char* file);
+
 
 protected:
-	int N;
-	int n;
+	int N, localN;
 	int K;
-	int F;
-    int minindex, maxindex;
-    int* nodes;
-    vector<FeatureTuple>* rawFeature;
+	int F, localFeatures;
+	int minindex, maxindex;
+	int* nodes;
+	vector<vector<FeatureTuple>> rawFeatures;
 	double** label;
 	double** pred;
 	double** score;
+	int myid, procs;
 	bool processLine(int &linenum, ifstream &input, int i);
+	bool processLabel(int &linenum, ifstream &input, )
 	bool parseFeatureTuple(string &cstring, string &cvalue);
 	int binarySearch(int f, int i);
 	void getSection();
 	void resetNode();
-
-
 }
 
 class FeatureData: public SVMData {
 public:
-	FeatureData(const char* file, int feature, int size, int _class, int myid, int procs);
+	FeatureData(int feature, int size, int _class, int myid, int procs);
 	~FeatureData();
 
 private:
-	int f;
 	int minifeature, maxfeature;
-	vector<FeatureTuple>* sortedFeature;
+	vector<vector<FeatureTuple>> sortedFeatures;
 	int whoHasFeature(int gf);
 	bool isLocalFeature(int gf);
 	int localFeatureIndex(int gf);

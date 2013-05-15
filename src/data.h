@@ -37,11 +37,17 @@ protected:
 	double** pred;
 	double** score;
 	int myid, procs;
+	int minifeature, maxfeature;
+	int whoHasFeature(int gf);
+	bool isLocalFeature(int gf);
+	int localFeatureIndex(int gf);
+	int globalFeatureIndex(int lf);
 	bool processLine(int &linenum, ifstream &input, int i);
 	bool processLabel(int &linenum, ifstream &input, )
 	bool parseFeatureTuple(string &cstring, string &cvalue);
 	int binarySearch(int f, int i);
 	void getSection();
+    void getFeatureSection();
 	void resetNode();
 }
 
@@ -55,8 +61,6 @@ private:
 	vector<vector<FeatureTuple>> sortedFeatures;
 	int whoHasFeature(int gf);
 	bool isLocalFeature(int gf);
-	int localFeatureIndex(int gf);
-	int globalFeatureIndex(int lf);
 	void sort();
 
 }

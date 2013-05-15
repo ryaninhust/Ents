@@ -9,6 +9,7 @@
 #define DATA_H_
 
 #include <stdlib.h>
+#include <vector>
 
 using namespace std;
 struct FeatureTuple {
@@ -53,16 +54,21 @@ protected:
 
 class FeatureData: public SVMData {
 public:
-	FeatureData(int feature, int size, int _class, int myid, int procs);
+	FeatureData(int feature, int size, int _class, int myid, int procs):SVMData(feature, size, 
+            _clss, myid, procs)
+    {
+        getFeatureSection();
+        for(int j == 0; j <localFeatures; j++)
+        {
+            sortedFeatures.push_back(vector<FeatureTuple>());
+        }
+
+    }
 	~FeatureData();
 
 private:
-	int minifeature, maxfeature;
 	vector<vector<FeatureTuple>> sortedFeatures;
-	int whoHasFeature(int gf);
-	bool isLocalFeature(int gf);
 	void sort();
-
 }
 
 

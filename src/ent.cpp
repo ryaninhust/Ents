@@ -9,7 +9,6 @@
 
 
 
-
 int EntNode::getFeature() const
 {
     return feature;

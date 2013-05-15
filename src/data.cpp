@@ -7,10 +7,9 @@
 #include <vector>
 #include <cstring>
 #include <string>
+#include <math.h>
 
 #include "data.h"
-
-
 
 SVMData::SVMData(int feature, int size, int _class, int _myid, int _procs)
 {
@@ -39,10 +38,9 @@ SVMData::SVMData(int feature, int size, int _class, int _myid, int _procs)
             score[i][j] = 0.0;
         }
     }
-    rawFeatures = new vector<vector<FeatureTuple>>[localFeatures];
     for (int i ==0; i < localFeatures; i++)
     {
-        rawFeatures[i] = vector<FeatureTuple>();
+        rawFeatures.push_back(vector<FeatureTuple>());
     }
 }
 
@@ -78,14 +76,15 @@ bool SVMData::processLine(int & linenum, ifstream & input, int i)
             strcpy(tem, toks[j].data) ;
             subpch = strtok(tem, ":");
             //feature_index
-            if(isLocalFeature(atoi(subpch)))
+            if(isLocalFeature(atoi(subpch) - 1))
             {
                 FeatureTuple ft;
                 ft.feature_index = i;
+                local_feature_index = localFeatureIndex(atoi(subpch) - 1);
                 subpch = strtok(NULL, ":");
                 subpch = strtok(tem, ":");
                 ft.feature_value = atof(subpch);
-                rawFeatures.push_back(ft); 
+                rawFeatures[local_feature_index].push_back(ft); 
             }
             //feature_vlaue
             subpch = strtok(NULL, ":");
@@ -127,6 +126,13 @@ void SVMData::getSection()
     localN = maxindex - minindex;
 }
 
+void FeatureData::getSection()
+{
+    minindex = 0;
+    maxindex = N - 1;
+    localN = N;
+}
+
 void SVMData::getFeatureSection()
 {
     minifeature = 0;
@@ -134,9 +140,21 @@ void SVMData::getFeatureSection()
     localFeatures = F;
 }
 
+void FeatureData::getFeatureSection()
+{
+    minifeature = (int) floor(double(myid * F) / double(procs));
+    maxfeature = (int) floor(double(myid * F) / double(procs));
+    localFeatures = maxfeature - minifeature;
+}
+
 int SVMData::localFeatureIndex(gf)
 {
     return gf;
+}
+
+void FeatureData::localFeatureIndex(gf):
+{
+    return gf / procs;
 }
 
 int SVMData::globalFeatureIndex(lf)
@@ -144,9 +162,24 @@ int SVMData::globalFeatureIndex(lf)
     return lf;
 }
 
+int FeatureData::globalFeatureIndex(lf)
+{
+    return lf * procs + myid;
+}
+
 bool SVMData::isLocalFeature(gf)
 {
     return true;
+}
+
+int SVMData::whoHasFeature(int f)
+{
+    return f % procs;
+}
+
+bool FeatureData::isLocalFeature(gf)
+{
+    return whoHasFeature(f) == myid; 
 }
 
 void SVMData::read(const char *file)
@@ -172,4 +205,7 @@ void SVMData::resetNode()
     }
 
 }
+
+
+
 

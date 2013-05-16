@@ -7,7 +7,8 @@
 #include <vector>
 #include <cstring>
 #include <string>
-#include <math.h>
+#include <math>
+#include <algorithm>
 
 #include "data.h"
 
@@ -56,6 +57,7 @@ bool SVMData::processLine(int & linenum, ifstream & input, int i)
     //TODO eof fails
     char line* = strdup(line, strline.c_str());
     vector<string> toks;
+
     char * pch;
     char * subpch;
     char * tem = new char[5];
@@ -206,6 +208,17 @@ void SVMData::resetNode()
 
 }
 
-
+void FeatureData::sort()
+{
+    for(int f = 0; f < sortedFeatures.size(); f++)
+    {
+        for(int index = 0; index < rawFeatures[f].size(); index ++)
+        {
+            sortedFeatures[f].push_back(rawFeatures[f][index]);
+        }
+        std::sort(sortedFeatures[f].begin(), sortedFeatures[f].end()
+                VectorSort());
+    }
+}
 
 

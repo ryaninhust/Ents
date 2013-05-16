@@ -18,8 +18,10 @@ struct FeatureTuple {
 };
 
 struct VectorSort {
-	bool operator() (const FeatureTuple a, const FeatureTuple b) const{};
-}
+	bool operator() (const FeatureTuple a, const FeatureTuple b) const{
+        return (a.feature_value > b.feature_value);
+    }
+};
 class SVMData {
 public:
 	SVMData(int feature, int size, int _class, int _myid, int _procs);
